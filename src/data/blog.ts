@@ -1,6 +1,5 @@
 import { z } from "zod"
-import { env } from "@/env.mjs"
-import { paginated } from "@/data/common"
+import { fetchBackend, getPaginationSearchParams, paginated } from "@/data/common"
 
 const postSchema = z.object({
     title: z.string(),
@@ -30,7 +29,6 @@ const postSchema = z.object({
 const postsResponseSchema = paginated(postSchema)
 
 export async function fetchPosts(page?: number) {
-    const params = new URLSearchParams(page ? { page: String(page) } : {})
-    const res = await fetch(`${env.API_BASE_URL}/blog?${params}`).then(r => r.json())
+    const res = await fetchBackend(`/blog?${getPaginationSearchParams(page)}`)
     return postsResponseSchema.parse(res)
 }
