@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { env } from "@/env.mjs"
+import { paginated } from "@/data/common"
 
 const postSchema = z.object({
     title: z.string(),
@@ -26,12 +27,7 @@ const postSchema = z.object({
     edited: z.string().datetime({ offset: true }),
 })
 
-const postsResponseSchema = z.object({
-    count: z.number(),
-    next: z.string().url().nullable(),
-    previous: z.string().url().nullable(),
-    results: z.array(postSchema),
-})
+const postsResponseSchema = paginated(postSchema)
 
 export async function fetchPosts(page?: number) {
     const params = new URLSearchParams(page ? { page: String(page) } : {})
