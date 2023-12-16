@@ -1,6 +1,10 @@
 import { z } from "zod"
 import { env } from "@/env.mjs"
 
+export const croppedImageUrlSchema = z.string().url()
+    .transform(s => s.startsWith("http://") ? s.replace("http", "https") : s)
+    .nullable()
+
 export const paginated = <T extends z.ZodTypeAny>(schema: T) => z.object({
     count: z.number(),
     next: z.string().url().nullable(),

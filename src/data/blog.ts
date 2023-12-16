@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { fetchBackend, getPaginationSearchParams, paginated } from "@/data/common"
+import { croppedImageUrlSchema, fetchBackend, getPaginationSearchParams, paginated } from "@/data/common"
 
 const postSchema = z.object({
     title: z.string(),
@@ -8,15 +8,13 @@ const postSchema = z.object({
         name: z.string(),
         color: z.string(),
     }),
-    image_cropped: z.string().url().nullable(),
+    image_cropped: croppedImageUrlSchema,
     summary: z.string().transform(s => s.replace("\r", "")),
     creator: z.object({
         id: z.number(),
         username: z.string(),
         url: z.string().url(),
-        image_cropped: z.string().url()
-            .transform(s => s.startsWith("http://") ? s.replace("http", "https") : s)
-            .nullable(),
+        image_cropped: croppedImageUrlSchema,
     }),
     post_views: z.number(),
     rating: z.number(),
