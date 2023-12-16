@@ -5,14 +5,19 @@ export const croppedImageUrlSchema = z.string().url()
     .transform(s => s.startsWith("http://") ? s.replace("http", "https") : s)
     .nullable()
 
+export const paginationUrlSchema = z.string().url()
+    .transform(u => new URL(u).searchParams.get("page"))
+    .transform(n => n ? +n : null)
+    .nullable()
+
 export const paginated = <T extends z.ZodTypeAny>(schema: T) => z.object({
     count: z.number(),
-    next: z.string().url().nullable(),
-    previous: z.string().url().nullable(),
+    next: paginationUrlSchema,
+    previous: paginationUrlSchema,
     results: z.array(schema),
 })
 
-export const getPaginationSearchParams = (page?: number, params: Record<string, string> = {}) =>
+export const getPaginationSearchParams = (page?: number | null, params: Record<string, string> = {}) =>
     new URLSearchParams(page ? { page: String(page), ...params } : params)
 
 export const fetchBackend = (pathname: string, init?: RequestInit) =>

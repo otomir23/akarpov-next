@@ -26,7 +26,7 @@ const postSchema = z.object({
 
 const postsResponseSchema = paginated(postSchema)
 
-export async function fetchPosts(page?: number) {
+export async function fetchPosts(page?: number | null) {
     const res = await fetchBackend(`/blog?${getPaginationSearchParams(page)}`)
     return postsResponseSchema.parse(res)
 }
