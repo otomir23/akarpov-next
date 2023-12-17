@@ -20,6 +20,15 @@ export const paginated = <T extends z.ZodTypeAny>(schema: T) => z.object({
 export const getPaginationSearchParams = (page?: number | null, params: Record<string, string> = {}) =>
     new URLSearchParams(page ? { page: String(page), ...params } : params)
 
+const lookupFailureSchema = z.object({
+    detail: z.literal("Not found."),
+})
+
+export const parseLookup = <T extends z.ZodTypeAny>(value: unknown, schema: T): z.infer<T> | null => {
+    if (lookupFailureSchema.safeParse(value).success) return null
+    return schema.parse(value)
+}
+
 export const fetchBackend = (pathname: string, init?: RequestInit) =>
     fetch(`${env.API_BASE_URL}${pathname}`, init)
         .then(r => r.json())
