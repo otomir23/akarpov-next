@@ -28,5 +28,8 @@ module.exports = {
             },
         }],
         "@stylistic/multiline-ternary": "off",
+        "@stylistic/brace-style": ["error", "1tbs", {
+            allowSingleLine: true,
+        }],
     },
 }
