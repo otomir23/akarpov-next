@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .seekbar::-webkit-slider-thumb {
+        @apply appearance-none w-4 h-4 rounded-full scale-0 bg-red-600 transition-transform group-hover:scale-100;
+    }
+
+    .seekbar {
+        @apply bg-transparent;
+    }
+
+    .seekbar::-webkit-slider-runnable-track {
+        @apply bg-transparent;
+    }
+}
