@@ -3,7 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { fetchPosts } from "@/data/blog"
 
-export async function Posts() {
+async function Posts() {
     const { results: posts } = await fetchPosts()
 
     return (
