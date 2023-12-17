@@ -27,5 +27,6 @@ module.exports = {
                 requireLast: false,
             },
         }],
+        "@stylistic/multiline-ternary": "off",
     },
 }
