@@ -2,7 +2,7 @@
 
 import { z } from "zod"
 import {
-    croppedImageUrlSchema,
+    mediaUrlSchema,
     fetchBackend,
     getPaginationSearchParams,
     paginated, parseLookup,
@@ -13,7 +13,7 @@ import {
 const catalogueAlbumSchema = z.object({
     name: z.string(),
     slug: z.string(),
-    image_cropped: croppedImageUrlSchema,
+    image_cropped: mediaUrlSchema.nullable(),
 })
 
 export type CatalogueAlbum = z.infer<typeof catalogueAlbumSchema>
@@ -30,7 +30,7 @@ export async function fetchAlbums(page?: number | null) {
 const catalogueAuthorSchema = z.object({
     name: z.string(),
     slug: z.string(),
-    image_cropped: croppedImageUrlSchema,
+    image_cropped: mediaUrlSchema.nullable(),
 })
 
 export type CatalogueAuthor = z.infer<typeof catalogueAuthorSchema>
@@ -47,8 +47,8 @@ export async function fetchAuthors(page?: number | null) {
 const catalogueSongSchema = z.object({
     name: z.string(),
     slug: z.string(),
-    file: z.string().url(),
-    image_cropped: croppedImageUrlSchema,
+    file: mediaUrlSchema,
+    image_cropped: mediaUrlSchema.nullable(),
     length: z.number(),
     album: catalogueAlbumSchema,
     authors: z.array(catalogueAuthorSchema),
@@ -67,12 +67,12 @@ export async function fetchSongs(page?: number | null) {
 // Song
 
 const songDetailsSchema = z.object({
-    image: croppedImageUrlSchema,
+    image: mediaUrlSchema.nullable(),
     link: z.string(),
     length: z.number(),
     played: z.number(),
     name: z.string(),
-    file: z.string().url(),
+    file: mediaUrlSchema,
     authors: z.array(catalogueAuthorSchema),
     album: catalogueAlbumSchema,
     liked: z.boolean().nullable(),
@@ -90,7 +90,7 @@ export type Song = CatalogueSong & SongDetails
 
 const albumDetailsSchema = z.object({
     name: z.string(),
-    image: croppedImageUrlSchema,
+    image: mediaUrlSchema.nullable(),
     link: z.string(),
     songs: z.array(catalogueSongSchema),
     artists: z.array(catalogueAuthorSchema),
@@ -107,7 +107,7 @@ export async function fetchAlbum(slug: string) {
 
 const authorDetailsSchema = z.object({
     name: z.string(),
-    image: croppedImageUrlSchema,
+    image: mediaUrlSchema.nullable(),
     link: z.string(),
     songs: z.array(catalogueSongSchema),
     albums: z.array(catalogueAlbumSchema),

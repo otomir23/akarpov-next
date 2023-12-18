@@ -1,9 +1,9 @@
 import { z } from "zod"
 import { env } from "@/env.mjs"
 
-export const croppedImageUrlSchema = z.string().url()
+export const mediaUrlSchema = z.string()
     .transform(s => s.startsWith("http://") ? s.replace("http", "https") : s)
-    .nullable()
+    .transform(s => new URL(s, `https://${env.MEDIA_BASE_HOSTNAME}`).href)
 
 export const paginationUrlSchema = z.string().url()
     .transform(u => new URL(u).searchParams.get("page"))
