@@ -72,7 +72,8 @@ export default function MusicControls() {
                         seek(v)
                     }}
                     ref={seekbarControl}
-                    className="appearance-none h-2 top-0 absolute cursor-pointer seekbar left-0 -right-4"
+                    className="appearance-none h-2 top-0 absolute cursor-pointer seekbar left-0 -right-4
+                    w-[calc(100%_+_1rem)]"
                 />
             </label>
             {
