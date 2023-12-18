@@ -92,16 +92,14 @@ export default function MusicControls() {
                     {currentSong.name}
                 </Link>
                 <p className="text-sm text-neutral-400">
-                    by {
-                    currentSong.authors.map((a, i) => (
+                    {currentSong.authors.map((a, i) => (
                         <Link href={`/music/authors/${a.slug}`} key={a.slug}>
                             {a.name}{i !== currentSong.authors.length - 1 && ", "}
                         </Link>
-                    ))
-                }
+                    ))}
                 </p>
             </div>
-            <button onClick={previous}>
+            <button onClick={previous} className="max-sm:hidden">
                 <ChevronFirstIcon />
             </button>
             <button onClick={togglePlaying}>
@@ -110,7 +108,7 @@ export default function MusicControls() {
             <button onClick={next}>
                 <ChevronLastIcon />
             </button>
-            <Link href={currentSong.file} target="_blank">
+            <Link href={currentSong.file} target="_blank" className="max-sm:hidden">
                 <DownloadIcon />
             </Link>
             <button onClick={() => setQueueOpen(o => !o)}>
