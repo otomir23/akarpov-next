@@ -30,5 +30,10 @@ export const parseLookup = <T extends z.ZodTypeAny>(value: unknown, schema: T): 
 }
 
 export const fetchBackend = (pathname: string, init?: RequestInit) =>
-    fetch(`${env.API_BASE_URL}${pathname}`, init)
-        .then(r => r.json())
+    fetch(`${env.API_BASE_URL}${pathname}`, {
+        ...init,
+        next: {
+            revalidate: init?.next?.revalidate ?? env.DATA_LIFETIME_SECONDS,
+            ...(init?.next),
+        },
+    }).then(r => r.json())
