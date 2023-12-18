@@ -56,17 +56,29 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
 
         console.log(`New audio - ${currentSong.name}`)
         const newAudio = new Audio(currentSong.file)
+
         audio.current = newAudio
+
         const endHandler = () => {
             queuePos >= queue.length - 1
                 ? setPlaying(false)
                 : next()
         }
         newAudio.addEventListener("ended", endHandler)
+
+        const stateChangeHandler = () => {
+            setPlaying(!newAudio.paused)
+        }
+        newAudio.addEventListener("pause", stateChangeHandler)
+        newAudio.addEventListener("play", stateChangeHandler)
+
         newAudio.play().then()
+
         return () => {
             newAudio.pause()
             newAudio.removeEventListener("ended", endHandler)
+            newAudio.removeEventListener("pause", stateChangeHandler)
+            newAudio.removeEventListener("play", stateChangeHandler)
         }
     },
     // We don't want to change songs when we adjust the queue, only when the current song actually changes
