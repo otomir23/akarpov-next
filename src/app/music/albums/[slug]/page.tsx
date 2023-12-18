@@ -3,8 +3,18 @@ import Image from "next/image"
 import SongList from "@/app/music/components/song-list"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { Metadata } from "next"
 
-export default async function SongPage({ params: { slug } }: { params: { slug: string } }) {
+export async function generateMetadata({ params: { slug } }: { params: { slug: string } }): Promise<Metadata> {
+    const album = await fetchAlbum(slug)
+    if (!album) notFound()
+
+    return {
+        title: `${album.name} by ${album.artists.map(a => a.name).join(", ")}`,
+    }
+}
+
+export default async function AlbumPage({ params: { slug } }: { params: { slug: string } }) {
     const album = await fetchAlbum(slug)
     if (!album) notFound()
 

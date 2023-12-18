@@ -3,8 +3,18 @@ import Image from "next/image"
 import SongList from "@/app/music/components/song-list"
 import AlbumList from "@/app/music/components/album-list"
 import { notFound } from "next/navigation"
+import { Metadata } from "next"
 
-export default async function SongPage({ params: { slug } }: { params: { slug: string } }) {
+export async function generateMetadata({ params: { slug } }: { params: { slug: string } }): Promise<Metadata> {
+    const author = await fetchAuthor(slug)
+    if (!author) notFound()
+
+    return {
+        title: `${author.name}'s Music`,
+    }
+}
+
+export default async function AuthorPage({ params: { slug } }: { params: { slug: string } }) {
     const author = await fetchAuthor(slug)
     if (!author) notFound()
 
