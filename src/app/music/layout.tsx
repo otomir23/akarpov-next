@@ -23,7 +23,7 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
                         <UserIcon />
                     </Link>
                 </aside>
-                <main className="p-8 overflow-auto w-full h-full scroll-smooth">
+                <main className="p-8 overflow-auto w-full h-full scroll-smooth pb-24">
                     {children}
                 </main>
             </div>
