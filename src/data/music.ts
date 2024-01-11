@@ -80,7 +80,7 @@ const songDetailsSchema = z.object({
 
 export type SongDetails = z.infer<typeof catalogueSongSchema>
 export async function fetchSong(slug: string) {
-    const res = await fetchBackend(`/music/song/${slug}/`)
+    const res = await fetchBackend(`/music/song/${slug}`)
     return parseLookup(res, songDetailsSchema)
 }
 
@@ -99,7 +99,7 @@ const albumDetailsSchema = z.object({
 export type AlbumDetails = z.infer<typeof albumDetailsSchema>
 
 export async function fetchAlbum(slug: string) {
-    const res = await fetchBackend(`/music/albums/${slug}/`)
+    const res = await fetchBackend(`/music/albums/${slug}`)
     return parseLookup(res, albumDetailsSchema)
 }
 
@@ -116,6 +116,6 @@ const authorDetailsSchema = z.object({
 export type AuthorDetails = z.infer<typeof authorDetailsSchema>
 
 export async function fetchAuthor(slug: string) {
-    const res = await fetchBackend(`/music/authors/${slug}/`)
+    const res = await fetchBackend(`/music/authors/${slug}`)
     return parseLookup(res, authorDetailsSchema)
 }
