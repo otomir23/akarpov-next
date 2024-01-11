@@ -21,7 +21,7 @@ export type CatalogueAlbum = z.infer<typeof catalogueAlbumSchema>
 const albumsResponseSchema = paginated(catalogueAlbumSchema)
 
 export async function fetchAlbums(page?: number | null) {
-    const res = await fetchBackend(`/music/albums?${getPaginationSearchParams(page)}`)
+    const res = await fetchBackend(`/music/albums/?${getPaginationSearchParams(page)}`)
     return albumsResponseSchema.parse(res)
 }
 
@@ -38,7 +38,7 @@ export type CatalogueAuthor = z.infer<typeof catalogueAuthorSchema>
 const authorsResponseSchema = paginated(catalogueAuthorSchema)
 
 export async function fetchAuthors(page?: number | null) {
-    const res = await fetchBackend(`/music/authors?${getPaginationSearchParams(page)}`)
+    const res = await fetchBackend(`/music/authors/?${getPaginationSearchParams(page)}`)
     return authorsResponseSchema.parse(res)
 }
 
@@ -60,7 +60,7 @@ export type CatalogueSong = z.infer<typeof catalogueSongSchema>
 const songsResponseSchema = paginated(catalogueSongSchema)
 
 export async function fetchSongs(page?: number | null) {
-    const res = await fetchBackend(`/music/song?${getPaginationSearchParams(page)}`)
+    const res = await fetchBackend(`/music/song/?${getPaginationSearchParams(page)}`)
     return songsResponseSchema.parse(res)
 }
 
@@ -80,7 +80,7 @@ const songDetailsSchema = z.object({
 
 export type SongDetails = z.infer<typeof catalogueSongSchema>
 export async function fetchSong(slug: string) {
-    const res = await fetchBackend(`/music/song/${slug}`)
+    const res = await fetchBackend(`/music/song/${slug}/`)
     return parseLookup(res, songDetailsSchema)
 }
 
@@ -99,7 +99,7 @@ const albumDetailsSchema = z.object({
 export type AlbumDetails = z.infer<typeof albumDetailsSchema>
 
 export async function fetchAlbum(slug: string) {
-    const res = await fetchBackend(`/music/albums/${slug}`)
+    const res = await fetchBackend(`/music/albums/${slug}/`)
     return parseLookup(res, albumDetailsSchema)
 }
 
@@ -116,6 +116,6 @@ const authorDetailsSchema = z.object({
 export type AuthorDetails = z.infer<typeof authorDetailsSchema>
 
 export async function fetchAuthor(slug: string) {
-    const res = await fetchBackend(`/music/authors/${slug}`)
+    const res = await fetchBackend(`/music/authors/${slug}/`)
     return parseLookup(res, authorDetailsSchema)
 }
