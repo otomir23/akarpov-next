@@ -76,6 +76,7 @@ const songDetailsSchema = z.object({
     authors: z.array(catalogueAuthorSchema),
     album: catalogueAlbumSchema,
     liked: z.boolean().nullable(),
+    volume: z.array(z.number()),
 })
 
 export type SongDetails = z.infer<typeof catalogueSongSchema>
