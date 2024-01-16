@@ -36,4 +36,4 @@ export const fetchBackend = (pathname: string, init?: RequestInit) =>
             revalidate: init?.next?.revalidate ?? env.DATA_LIFETIME_SECONDS,
             ...(init?.next),
         },
-    }).then(r => r.json())
+    }).then(r => r.json() as unknown)
