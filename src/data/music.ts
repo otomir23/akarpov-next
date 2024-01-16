@@ -4,8 +4,8 @@ import { z } from "zod"
 import {
     mediaUrlSchema,
     fetchBackend,
-    getPaginationSearchParams,
-    paginated, parseLookup,
+    searchParam,
+    paginated, parseLookup, composeSearchParams,
 } from "@/data/common"
 
 // Albums
@@ -21,7 +21,10 @@ export type CatalogueAlbum = z.infer<typeof catalogueAlbumSchema>
 const albumsResponseSchema = paginated(catalogueAlbumSchema)
 
 export async function fetchAlbums(page?: number | null) {
-    const res = await fetchBackend(`/music/albums/?${getPaginationSearchParams(page)}`)
+    const params = composeSearchParams({
+        ...searchParam(page),
+    })
+    const res = await fetchBackend(`/music/albums/?${params}`)
     return albumsResponseSchema.parse(res)
 }
 
@@ -38,7 +41,10 @@ export type CatalogueAuthor = z.infer<typeof catalogueAuthorSchema>
 const authorsResponseSchema = paginated(catalogueAuthorSchema)
 
 export async function fetchAuthors(page?: number | null) {
-    const res = await fetchBackend(`/music/authors/?${getPaginationSearchParams(page)}`)
+    const params = composeSearchParams({
+        ...searchParam(page),
+    })
+    const res = await fetchBackend(`/music/authors/?${params}`)
     return authorsResponseSchema.parse(res)
 }
 
@@ -60,7 +66,10 @@ export type CatalogueSong = z.infer<typeof catalogueSongSchema>
 const songsResponseSchema = paginated(catalogueSongSchema)
 
 export async function fetchSongs(page?: number | null) {
-    const res = await fetchBackend(`/music/song/?${getPaginationSearchParams(page)}`)
+    const params = composeSearchParams({
+        ...searchParam(page),
+    })
+    const res = await fetchBackend(`/music/song/?${params}`)
     return songsResponseSchema.parse(res)
 }
 

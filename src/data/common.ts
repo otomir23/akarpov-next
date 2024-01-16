@@ -5,6 +5,16 @@ export const mediaUrlSchema = z.string()
     .transform(s => s.startsWith("http://") ? s.replace("http", "https") : s)
     .transform(s => new URL(s, `https://${env.MEDIA_BASE_HOSTNAME}`).href)
 
+export const composeSearchParams = (params: Record<string, string | null | undefined>): URLSearchParams =>
+    new URLSearchParams(
+        Object
+            .entries(params)
+            .filter((e): e is [string, string] => e[1] !== null && e[1] !== undefined)
+    )
+
+export const searchParam = <T extends string | number | boolean>(param?: T | null) =>
+    (param ?? null) !== null ? { param: `${param}` } : {}
+
 export const paginationUrlSchema = z.string().url()
     .transform(u => new URL(u).searchParams.get("page"))
     .transform(n => n ? +n : null)
@@ -16,9 +26,6 @@ export const paginated = <T extends z.ZodTypeAny>(schema: T) => z.object({
     previous: paginationUrlSchema,
     results: z.array(schema),
 })
-
-export const getPaginationSearchParams = (page?: number | null, params: Record<string, string> = {}) =>
-    new URLSearchParams(page ? { page: String(page), ...params } : params)
 
 const lookupFailureSchema = z.object({
     detail: z.literal("Not found."),
