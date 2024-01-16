@@ -118,7 +118,6 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
         newAudio.addEventListener("pause", stateChangeHandler)
         newAudio.addEventListener("play", stateChangeHandler)
 
-
         newAudio.volume = prevVolume
         newAudio.play().then()
 

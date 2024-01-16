@@ -100,7 +100,7 @@ export default function MusicControls() {
         lastFrame = requestAnimationFrame(update)
 
         return () => cancelAnimationFrame(lastFrame)
-    }, [requestMetadata, updateSeekbar])
+    }, [requestMetadata, updateSeekbar, updateVolumeControl])
 
     useEffect(() => {
         const resize = () => {
