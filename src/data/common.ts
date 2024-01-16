@@ -5,15 +5,15 @@ export const mediaUrlSchema = z.string()
     .transform(s => s.startsWith("http://") ? s.replace("http", "https") : s)
     .transform(s => new URL(s, `https://${env.MEDIA_BASE_HOSTNAME}`).href)
 
-export const composeSearchParams = (params: Record<string, string | null | undefined>): URLSearchParams =>
+export const composeSearchParams = (
+    params: Record<string, string | number | boolean | null | undefined>
+): URLSearchParams =>
     new URLSearchParams(
         Object
             .entries(params)
+            .map(([k, v]) => [k, (v ?? null) !== null ? `${v}` : null] as const)
             .filter((e): e is [string, string] => e[1] !== null && e[1] !== undefined)
     )
-
-export const searchParam = <T extends string | number | boolean>(param?: T | null) =>
-    (param ?? null) !== null ? { param: `${param}` } : {}
 
 export const paginationUrlSchema = z.string().url()
     .transform(u => new URL(u).searchParams.get("page"))

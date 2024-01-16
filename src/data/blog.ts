@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { mediaUrlSchema, fetchBackend, getPaginationSearchParams, paginated } from "@/data/common"
+import { mediaUrlSchema, fetchBackend, composeSearchParams, paginated } from "@/data/common"
 
 const postSchema = z.object({
     title: z.string(),
@@ -27,6 +27,9 @@ const postSchema = z.object({
 const postsResponseSchema = paginated(postSchema)
 
 export async function fetchPosts(page?: number | null) {
-    const res = await fetchBackend(`/blog/?${getPaginationSearchParams(page)}`)
+    const params = composeSearchParams({
+        page,
+    })
+    const res = await fetchBackend(`/blog/?${params}`)
     return postsResponseSchema.parse(res)
 }

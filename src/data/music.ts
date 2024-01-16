@@ -4,7 +4,6 @@ import { z } from "zod"
 import {
     mediaUrlSchema,
     fetchBackend,
-    searchParam,
     paginated, parseLookup, composeSearchParams,
 } from "@/data/common"
 
@@ -22,7 +21,7 @@ const albumsResponseSchema = paginated(catalogueAlbumSchema)
 
 export async function fetchAlbums(page?: number | null) {
     const params = composeSearchParams({
-        ...searchParam(page),
+        page,
     })
     const res = await fetchBackend(`/music/albums/?${params}`)
     return albumsResponseSchema.parse(res)
@@ -42,7 +41,7 @@ const authorsResponseSchema = paginated(catalogueAuthorSchema)
 
 export async function fetchAuthors(page?: number | null) {
     const params = composeSearchParams({
-        ...searchParam(page),
+        page,
     })
     const res = await fetchBackend(`/music/authors/?${params}`)
     return authorsResponseSchema.parse(res)
@@ -67,7 +66,7 @@ const songsResponseSchema = paginated(catalogueSongSchema)
 
 export async function fetchSongs(page?: number | null) {
     const params = composeSearchParams({
-        ...searchParam(page),
+        page,
     })
     const res = await fetchBackend(`/music/song/?${params}`)
     return songsResponseSchema.parse(res)
