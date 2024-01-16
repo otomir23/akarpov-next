@@ -3,8 +3,16 @@
 @tailwind utilities;
 
 @layer components {
-    .seekbar::-webkit-slider-thumb, .seekbar::-moz-range-thumb {
+    .seekbar-thumb {
         @apply appearance-none w-4 h-4 rounded-full scale-0 bg-red-600 transition-transform group-hover:scale-100 border-0;
+    }
+
+    .seekbar::-webkit-slider-thumb {
+        @apply seekbar-thumb;
+    }
+
+    .seekbar::-moz-range-thumb {
+        @apply seekbar-thumb;
     }
 
     .seekbar {
