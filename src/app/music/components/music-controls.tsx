@@ -84,7 +84,7 @@ export default function MusicControls() {
                     }
 
                     if (barPlayed < 1) {
-                        ctx.fillStyle = `rgb(220 220 220)`
+                        ctx.fillStyle = `rgb(229 229 229)`
                         ctx.fillRect(
                             ctx.canvas.width * barFramePos + barWidth * barPlayed,
                             ctx.canvas.height - barHeight,
@@ -120,7 +120,7 @@ export default function MusicControls() {
             after:backdrop-blur-lg after:bg-white/90 after:absolute after:inset-0 after:-z-10"
         >
             <label
-                className="absolute inset-x-0 -top-2 h-2 bg-white opacity-80 hover:opacity-100
+                className="absolute inset-x-0 -top-2 h-2 bg-neutral-200 opacity-80 hover:opacity-100
                 transition-opacity group z-30"
                 ref={seekbarParent}
             >
