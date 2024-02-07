@@ -48,6 +48,11 @@ export default function MediaGrid<E extends CatalogueElement>(
     }
 
     useEffect(() => {
+        setData(initialData.results)
+        setNextPage(initialData.next)
+    }, [initialData])
+
+    useEffect(() => {
         if (loadMoreButtonInView && nextPage !== null)
             loadMore().then()
     },

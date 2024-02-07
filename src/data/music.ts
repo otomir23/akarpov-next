@@ -64,8 +64,9 @@ export type CatalogueSong = z.infer<typeof catalogueSongSchema>
 
 const songsResponseSchema = paginated(catalogueSongSchema)
 
-export async function fetchSongs(page?: number | null) {
+export async function fetchSongs(page?: number | null, search: string | null = null) {
     const params = composeSearchParams({
+        search,
         page,
     })
     const res = await fetchBackend(`/music/song/?${params}`)
