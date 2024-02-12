@@ -9,8 +9,17 @@ export async function generateMetadata({ params: { slug } }: { params: { slug: s
     const author = await fetchAuthor(slug)
     if (!author) notFound()
 
+    const desc = `Musician with ${author.songs.length} songs and ${author.albums.length} albums.`
     return {
         title: `${author.name}'s Music`,
+        description: desc,
+        openGraph: {
+            type: "profile",
+            title: author.name,
+            description: desc,
+            images: author.image ?? undefined,
+            username: slug,
+        },
     }
 }
 

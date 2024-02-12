@@ -9,8 +9,18 @@ export async function generateMetadata({ params: { slug } }: { params: { slug: s
     const album = await fetchAlbum(slug)
     if (!album) notFound()
 
+    const desc = `An album by ${album.artists.map(a => a.name).join(", ")} featuring ${album.songs.length} songs.`
     return {
         title: `${album.name} by ${album.artists.map(a => a.name).join(", ")}`,
+        description: desc,
+        openGraph: {
+            type: "music.album",
+            title: album.name,
+            images: album.image ?? undefined,
+            description: desc,
+            songs: album.songs.map(a => a.name),
+            musicians: album.artists.map(a => a.name),
+        },
     }
 }
 
