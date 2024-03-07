@@ -54,7 +54,7 @@ export default async function AlbumPage({ params: { slug } }: { params: { slug: 
                     </p>
                 </figcaption>
             </figure>
-            <SongList songs={album.songs} addIds />
+            <SongList songs={album.songs} addIds showCovers={false} />
         </div>
     )
 }
