@@ -2,6 +2,7 @@
 
 import { createContext, useState, ReactNode, useEffect, useRef, useCallback, useContext } from "react"
 import { CatalogueAlbum, CatalogueAuthor, fetchAlbum, fetchAuthor, fetchSong, Song } from "@/data/music"
+import { shuffle } from "@/util"
 
 type FrameMetadata = {
     playing: boolean,
@@ -14,6 +15,7 @@ type MusicPlayerContext = {
     currentSong: Song | null,
     queue: Song[],
     playing: boolean,
+    looping: boolean,
     play: (queue: Song[]) => void,
     switchTo: (pos: number) => void,
     clear: () => void,
@@ -23,6 +25,8 @@ type MusicPlayerContext = {
     seek: (position: number) => void,
     requestMetadata: () => FrameMetadata,
     updateVolume: (vol: number) => void,
+    shuffleQueue: () => void,
+    toggleLooping: () => void,
 }
 
 export const MusicPlayerContext = createContext<MusicPlayerContext>(null!)
@@ -32,6 +36,7 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
     const [queue, setQueue] = useState<Song[]>([])
     const [queuePos, setQueuePos] = useState<number>(0)
     const [playing, setPlaying] = useState<boolean>(false)
+    const [looping, setLooping] = useState<boolean>(false)
     const audio = useRef<HTMLAudioElement | null>(null)
     const lastMetadata = useRef<FrameMetadata>({
         playing: false,
@@ -56,7 +61,11 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
         audio.current.currentTime = pos * audio.current.duration
     }, [])
 
-    const next = useCallback(() => setQueuePos(q => q + 1), [])
+    const next = useCallback(() => {
+        queuePos >= queue.length - 1
+            ? setQueuePos(0)
+            : setQueuePos(q => q + 1)
+    }, [queuePos, queue])
     const previous = useCallback(() => {
         if (queuePos === 0) seek(0)
         else setQueuePos(q => q - 1)
@@ -90,6 +99,13 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
         return newMetadata
     }, [])
 
+    const shuffleQueue = useCallback(() => {
+        setQueue([
+            ...queue.slice(0, queuePos + 1),
+            ...shuffle(queue.slice(queuePos + 1, queue.length)),
+        ])
+    }, [queue, queuePos])
+
     useEffect(() => {
         if (!currentSong) return
 
@@ -105,13 +121,6 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
 
         audio.current = newAudio
 
-        const endHandler = () => {
-            queuePos >= queue.length - 1
-                ? setPlaying(false)
-                : next()
-        }
-        newAudio.addEventListener("ended", endHandler)
-
         const stateChangeHandler = () => {
             setPlaying(!newAudio.paused)
         }
@@ -123,7 +132,6 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
 
         return () => {
             newAudio.pause()
-            newAudio.removeEventListener("ended", endHandler)
             newAudio.removeEventListener("pause", stateChangeHandler)
             newAudio.removeEventListener("play", stateChangeHandler)
             fullWaveform.current = null
@@ -133,6 +141,22 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSong]
     )
+
+    useEffect(() => {
+        const currAudio = audio.current
+        if (!currAudio) return
+
+        const endHandler = () => {
+            if (!looping) return next()
+            currAudio.currentTime = 0
+            void currAudio.play()
+        }
+        currAudio.addEventListener("ended", endHandler)
+
+        return () => {
+            currAudio.removeEventListener("ended", endHandler)
+        }
+    }, [currentSong, looping, next])
 
     useEffect(() => {
         playing ? audio.current?.play() : audio.current?.pause()
@@ -151,7 +175,8 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
                 queue,
                 playing,
                 play,
-
+                looping,
+                toggleLooping: () => setLooping(l => !l),
                 switchTo: setQueuePos,
                 clear,
                 next,
@@ -160,6 +185,7 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
                 seek,
                 requestMetadata,
                 updateVolume,
+                shuffleQueue,
             }}
         >
             {children}

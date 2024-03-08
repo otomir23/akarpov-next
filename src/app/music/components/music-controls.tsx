@@ -5,13 +5,17 @@ import { MusicPlayerContext } from "@/app/music/components/music-player"
 import Image from "next/image"
 import Link from "next/link"
 import {
+    ArrowDownCircleIcon,
     ChevronFirstIcon,
     ChevronLastIcon,
     DownloadIcon,
     ListMusicIcon,
     ListXIcon,
     PauseIcon,
-    PlayIcon, Volume2Icon, VolumeXIcon,
+    PlayIcon, Repeat1Icon, RepeatIcon,
+    ShuffleIcon,
+    Volume2Icon,
+    VolumeXIcon,
 } from "lucide-react"
 import Queue from "@/app/music/components/queue"
 
@@ -26,6 +30,9 @@ export default function MusicControls() {
         requestMetadata,
         updateVolume,
         clear,
+        shuffleQueue,
+        toggleLooping,
+        looping,
     } = useContext(MusicPlayerContext)
     const seekbar = useRef<HTMLDivElement>(null)
     const seekbarControl = useRef<HTMLInputElement>(null)
@@ -187,9 +194,17 @@ export default function MusicControls() {
                 <div className="w-full max-w-xl mx-auto">
                     <Queue />
                 </div>
-                <button onClick={clear} className="absolute right-2 bottom-6">
-                    <ListXIcon />
-                </button>
+                <div className="absolute right-2 bottom-6 flex flex-col gap-3">
+                    <button onClick={clear}>
+                        <ListXIcon />
+                    </button>
+                    <button onClick={shuffleQueue}>
+                        <ShuffleIcon />
+                    </button>
+                    <button onClick={toggleLooping}>
+                        {looping ? <Repeat1Icon /> : <RepeatIcon />}
+                    </button>
+                </div>
             </div>
             <div className="relative flex gap-4 items-center group">
                 <button
