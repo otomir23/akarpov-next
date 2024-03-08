@@ -6,7 +6,7 @@ export default function MediaGridContainer(
 ) {
     return (
         <>
-            <div className="w-full flex flex-row justify-between items-center mb-4">
+            <div className="w-full flex flex-row justify-between items-center mb-4 gap-3">
                 <h2 className="font-bold text-2xl">{name}</h2>
                 {aside}
             </div>
