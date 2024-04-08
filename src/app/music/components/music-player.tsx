@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useState, ReactNode, useEffect, useRef, useCallback, useContext } from "react"
-import { CatalogueAlbum, CatalogueAuthor, fetchAlbum, fetchAuthor, fetchSong, Song } from "@/data/music"
+import { CatalogueAlbum, CatalogueAuthor, fetchAlbum, fetchAuthor, fetchSong, listen, Song } from "@/data/music"
 import { shuffle } from "@/util"
 
 type FrameMetadata = {
@@ -118,6 +118,9 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
             if (!r) return
             fullWaveform.current = r.volume
         })
+
+        // Explicit listen request voiding, because we don't care about the result
+        void listen(currentSong.slug)
 
         audio.current = newAudio
 

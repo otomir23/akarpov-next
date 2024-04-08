@@ -6,6 +6,7 @@ import {
     fetchBackend,
     paginated, parseLookup, composeSearchParams,
 } from "@/data/common"
+import { getMusicAuth } from "@/data/music-auth"
 
 // Albums
 
@@ -128,4 +129,19 @@ export type AuthorDetails = z.infer<typeof authorDetailsSchema>
 export async function fetchAuthor(slug: string) {
     const res = await fetchBackend(`/music/authors/${slug}`)
     return parseLookup(res, authorDetailsSchema)
+}
+
+export async function listen(slug: string) {
+    const auth = await getMusicAuth()
+    await fetchBackend("/music/song/listen/", {
+        method: "POST",
+        body: JSON.stringify({
+            song: slug,
+            user_id: auth.type === "anon" ? auth.id : undefined,
+        }),
+        headers: {
+            "Authorization": auth.type === "token" ? `Bearer ${auth.token}` : "",
+            "Content-Type": "application/json",
+        },
+    }, false)
 }
