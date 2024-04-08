@@ -36,11 +36,11 @@ export const parseLookup = <T extends z.ZodTypeAny>(value: unknown, schema: T): 
     return schema.parse(value)
 }
 
-export const fetchBackend = (pathname: string, init?: RequestInit) =>
+export const fetchBackend = (pathname: string, init?: RequestInit, parse = true) =>
     fetch(`${env.API_BASE_URL}${pathname}`, {
         ...init,
         next: {
             revalidate: init?.next?.revalidate ?? env.DATA_LIFETIME_SECONDS,
             ...(init?.next),
         },
-    }).then(r => r.json() as unknown)
+    }).then(r => (parse ? r.json() : r.text()) as Promise<unknown>)
