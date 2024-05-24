@@ -2,24 +2,26 @@
 
 import MediaGrid from "@/app/music/components/media-grid"
 import { fetchAlbums } from "@/data/music"
-import { useCallback, useContext } from "react"
+import { useContext, useMemo } from "react"
 import { MusicPlayerContext, usePlayMediaTypes } from "@/app/music/components/music-player"
+
+const convert = (data: Awaited<ReturnType<typeof fetchAlbums>>) => ({
+    ...data,
+    results: data.results.map(album => ({
+        ...album,
+        authors: [],
+    })),
+})
 
 export default function Albums({ initialData }: { initialData: Awaited<ReturnType<typeof fetchAlbums>> }) {
     const { playing, togglePlaying, currentSong } = useContext(MusicPlayerContext)
     const { playAlbum } = usePlayMediaTypes()
 
-    const convert = useCallback((data: Awaited<ReturnType<typeof fetchAlbums>>) => ({
-        ...data,
-        results: data.results.map(album => ({
-            ...album,
-            authors: [],
-        })),
-    }), [])
+    const convertedData = useMemo(() => convert(initialData), [initialData])
 
     return (
         <MediaGrid
-            initialData={convert(initialData)}
+            initialData={convertedData}
             fetch={p => fetchAlbums(p).then(convert)}
             onSwitch={(el) => { currentSong?.album.slug === el.slug ? togglePlaying() : playAlbum(el) }}
             isPlayingProvider={el => playing && currentSong?.album.slug === el.slug}
