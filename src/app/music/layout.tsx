@@ -6,6 +6,7 @@ import { AlbumIcon, LogInIcon, Music4Icon, UserIcon } from "lucide-react"
 import { Metadata } from "next"
 import { getSelf } from "@/data/user"
 import Image from "next/image"
+import MusicControlsBarrier from "@/app/music/components/music-controls-barrier"
 
 export const metadata: Metadata = {
     title: {
@@ -53,6 +54,9 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
                     <Suspense fallback={<div className="w-6 h-6 rounded-full bg-neutral-200 animate-pulse" />}>
                         <User />
                     </Suspense>
+                    <MusicControlsBarrier>
+                        <div className="sm:h-24 max-sm:hidden" />
+                    </MusicControlsBarrier>
                 </aside>
                 <main className="p-6 sm:p-8 overflow-auto w-full h-full scroll-smooth pb-24 sm:pb-24">
                     {children}
