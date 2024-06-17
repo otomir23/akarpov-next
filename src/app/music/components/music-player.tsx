@@ -81,6 +81,12 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
     const requestMetadata = useCallback(() => {
         const playing = !(audio.current?.paused ?? true)
         const position = (audio.current?.currentTime || 0) / (audio.current?.duration || 1)
+        if (audio.current && audio.current.duration)
+            navigator.mediaSession.setPositionState({
+                position: position || audio.current.currentTime,
+                playbackRate: audio.current.playbackRate,
+                duration: audio.current.duration,
+            })
         const volume = audio.current?.volume || 0
         if (lastMetadata.current.position === position
             && lastMetadata.current.playing === playing
@@ -131,7 +137,16 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
         newAudio.addEventListener("play", stateChangeHandler)
 
         newAudio.volume = prevVolume
-        newAudio.play().then()
+        newAudio.play().then(() => {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: currentSong.name,
+                artist: currentSong.authors.map(a => a.name).join(", "),
+                album: currentSong.album.name,
+                artwork: currentSong.image_cropped ? [
+                    { src: currentSong.image_cropped },
+                ] : [],
+            })
+        })
 
         return () => {
             newAudio.pause()
@@ -170,6 +185,15 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
         setCurrentSong(queue[queuePos])
         setPlaying(true)
     }, [queue, queuePos, clear])
+
+    useEffect(() => {
+        navigator.mediaSession.setActionHandler("previoustrack", previous)
+        navigator.mediaSession.setActionHandler("nexttrack", next)
+        navigator.mediaSession.setActionHandler("seekto", ({ seekTime }) => {
+            if (!seekTime || !audio.current || !audio.current.duration) return
+            seek(seekTime / audio.current.duration)
+        })
+    }, [previous, next, seek])
 
     return (
         <MusicPlayerContext.Provider
