@@ -40,7 +40,7 @@ export default function Volume() {
             >
                 <VolumeIcon />
             </button>
-            <div className="w-4 h-full absolute -right-4" />
+            <div className="w-4 h-full absolute -right-4 hidden group-hover:block" />
             <input
                 type="range"
                 className="absolute -right-4 translate-x-full opacity-0 pointer-events-none transition py-8
