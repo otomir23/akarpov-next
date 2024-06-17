@@ -58,8 +58,11 @@ export default function MusicLayout({ children }: { children: ReactNode }) {
                         <div className="sm:h-24 max-sm:hidden" />
                     </MusicControlsBarrier>
                 </aside>
-                <main className="p-6 sm:p-8 overflow-auto w-full h-full scroll-smooth pb-24 sm:pb-24">
+                <main className="p-6 sm:p-8 overflow-auto w-full h-full scroll-smooth">
                     {children}
+                    <MusicControlsBarrier>
+                        <div className="h-24" />
+                    </MusicControlsBarrier>
                 </main>
             </div>
         </MusicPlayer>
