@@ -34,7 +34,7 @@ export default function Volume() {
     }, [requestMetadata, updateVolumeControl])
 
     return (
-        <div className="relative flex gap-4 items-center group">
+        <div className="relative flex gap-4 items-center group z-10">
             <button
                 onClick={() => updateVolume(muted ? 1 : 0)}
             >
