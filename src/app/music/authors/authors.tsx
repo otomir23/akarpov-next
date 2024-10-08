@@ -13,7 +13,9 @@ const convert = (data: Awaited<ReturnType<typeof fetchAuthors>>) => ({
     })),
 })
 
-export default function Authors({ initialData }: { initialData: Awaited<ReturnType<typeof fetchAuthors>> }) {
+export default function Authors(
+    { initialData, search }: { initialData: Awaited<ReturnType<typeof fetchAuthors>>, search?: string }
+) {
     const { playing, togglePlaying, currentSong } = useContext(MusicPlayerContext)
     const { playAuthor } = usePlayMediaTypes()
 
@@ -25,7 +27,7 @@ export default function Authors({ initialData }: { initialData: Awaited<ReturnTy
     return (
         <MediaGrid
             initialData={convertedData}
-            fetch={p => fetchAuthors(p).then(convert)}
+            fetch={p => fetchAuthors(p, search).then(convert)}
             onSwitch={(el) => { isPlaying(el.slug) ? togglePlaying() : playAuthor(el) }}
             isPlayingProvider={el => playing && isPlaying(el.slug)}
             linkProvider={el => `/music/authors/${el.slug}`}

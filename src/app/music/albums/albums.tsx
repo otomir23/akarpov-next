@@ -13,7 +13,9 @@ const convert = (data: Awaited<ReturnType<typeof fetchAlbums>>) => ({
     })),
 })
 
-export default function Albums({ initialData }: { initialData: Awaited<ReturnType<typeof fetchAlbums>> }) {
+export default function Albums(
+    { initialData, search }: { initialData: Awaited<ReturnType<typeof fetchAlbums>>, search?: string }
+) {
     const { playing, togglePlaying, currentSong } = useContext(MusicPlayerContext)
     const { playAlbum } = usePlayMediaTypes()
 
@@ -22,7 +24,7 @@ export default function Albums({ initialData }: { initialData: Awaited<ReturnTyp
     return (
         <MediaGrid
             initialData={convertedData}
-            fetch={p => fetchAlbums(p).then(convert)}
+            fetch={p => fetchAlbums(p, search).then(convert)}
             onSwitch={(el) => { currentSong?.album.slug === el.slug ? togglePlaying() : playAlbum(el) }}
             isPlayingProvider={el => playing && currentSong?.album.slug === el.slug}
             linkProvider={el => `/music/albums/${el.slug}`}

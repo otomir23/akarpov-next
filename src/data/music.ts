@@ -20,8 +20,9 @@ export type CatalogueAlbum = z.infer<typeof catalogueAlbumSchema>
 
 const albumsResponseSchema = paginated(catalogueAlbumSchema)
 
-export async function fetchAlbums(page?: number | null) {
+export async function fetchAlbums(page?: number | null, search: string | null = null) {
     const params = composeSearchParams({
+        search,
         page,
     })
     const res = await fetchBackend(`/music/albums/?${params}`)
@@ -40,8 +41,9 @@ export type CatalogueAuthor = z.infer<typeof catalogueAuthorSchema>
 
 const authorsResponseSchema = paginated(catalogueAuthorSchema)
 
-export async function fetchAuthors(page?: number | null) {
+export async function fetchAuthors(page?: number | null, search: string | null = null) {
     const params = composeSearchParams({
+        search,
         page,
     })
     const res = await fetchBackend(`/music/authors/?${params}`)
