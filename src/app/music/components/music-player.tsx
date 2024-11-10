@@ -81,7 +81,7 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
     const requestMetadata = useCallback(() => {
         const playing = !(audio.current?.paused ?? true)
         const position = (audio.current?.currentTime || 0) / (audio.current?.duration || 1)
-        if (audio.current && audio.current.duration)
+        if (audio.current && audio.current.duration && navigator.mediaSession)
             navigator.mediaSession.setPositionState({
                 position: position || audio.current.currentTime,
                 playbackRate: audio.current.playbackRate,
@@ -138,6 +138,7 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
 
         newAudio.volume = prevVolume
         newAudio.play().then(() => {
+            if (!navigator.mediaSession) return
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: currentSong.name,
                 artist: currentSong.authors.map(a => a.name).join(", "),
@@ -187,6 +188,7 @@ export default function MusicPlayer({ children }: { children: ReactNode }) {
     }, [queue, queuePos, clear])
 
     useEffect(() => {
+        if (!navigator.mediaSession) return
         navigator.mediaSession.setActionHandler("previoustrack", previous)
         navigator.mediaSession.setActionHandler("nexttrack", next)
         navigator.mediaSession.setActionHandler("seekto", ({ seekTime }) => {
